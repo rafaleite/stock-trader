@@ -5,6 +5,7 @@ import VueRouter from 'vue-router'
 
 import App from './App'
 import {routes} from './routes'
+import store from './store/store'
 
 Vue.config.productionTip = false
 
@@ -15,10 +16,10 @@ const router = new VueRouter({
   routes
 })
 
-/* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
