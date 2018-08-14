@@ -10,10 +10,10 @@
           <router-link to="/portfolio" tag="li" activeClass="active"><a>Portfolio</a></router-link>
           <router-link to="/stocks" tag="li" activeClass="active"><a>Stocks</a></router-link>
         </ul>
-
+        <strong class="navbar-text navbar-right"> Founds: {{founds | currency}}</strong>
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="#">End Day</a></li>
-          <li class="dropdown">
+          <li><a href="#" @click="endDay">End Day</a></li>
+          <li class="dropdown" :class="{open: isDropDownOpen}" @click="isDropDownOpen = !isDropDownOpen">
             <a href="#"
                class="dropdown-toggle"
                data-toggle="dropdown"
@@ -21,8 +21,8 @@
                aria-haspopup="true"
                aria-expanded="false">Save & Load <span class="caret"></span></a>
             <ul class="dropdown-menu">
-              <li><a href="#">Save Data</a></li>
-              <li><a href="#">Load Data</a></li>
+              <li><a href="#" @click="saveData">Save Data</a></li>
+              <li><a href="#" @click="loadData">Load Data</a></li>
             </ul>
           </li>
         </ul>
@@ -32,8 +32,38 @@
 </template>
 
 <script>
+    import {mapActions} from 'vuex'
     export default {
-        name: "Header"
+      data() {
+        return {
+          isDropDownOpen: false
+        }
+      },
+      computed: {
+        founds(){
+          return this.$store.getters.founds
+        }
+      },
+      methods: {
+        ...mapActions({
+          randomizeStocks: 'randomizeStocks',
+          fetchData: 'loadData'
+        }),
+        endDay() {
+          this.randomizeStocks()
+        },
+        saveData() {
+          const data = {
+            founds: this.$store.getters.founds,
+            stockPortfolio: this.$store.getters.stockPortfolio,
+            stocks: this.$store.getters.stocks
+          }
+          this.$http.put('stocks.json', data)
+        },
+        loadData() {
+          this.fetchData()
+        }
+      }
     }
 </script>
 
